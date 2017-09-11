@@ -22,6 +22,7 @@ normative:
   RFC2119:
   RFC2317:
   RFC2818:
+  RFC3596:
   RFC6844:
 
 --- abstract
@@ -35,7 +36,11 @@ a method for holders of IP addresses to do the same.
 
 # Introduction
 
-asd
+This document describes an extension to RFC 6844 {{!RFC6844}} which allows for
+the use of Certification Authority Authorization DNS Records to be used to
+restrict issuance of certificates to IP addresses instead of just DNS names.
+This is done by defining a new lookup mechanism for IPv4 and IPv6 addresses
+as previously a mechanism only existed for DNS names.
 
 # Terminology
 
@@ -44,7 +49,7 @@ NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" are to be
 interpreted as described in BCP 14, RFC 2119 {{RFC2119}} and indicate
 requirement levels for compliant ACME-Wildcard implementations.
 
-# Certification Authority Processing For IP Addresses
+# Mechanism
 
 Before issuing a certificate containing a IP address a compliant CA MUST check
 for the relevant CAA Resource Record set. If such a record set exists a CA MUST
@@ -56,23 +61,24 @@ MUST verify the CA Resource Record set for all the IP addresses specified in
 the request.
 
 As defined in RFC 2818 {{RFC2818}} IP addresses in certificates must match
-exactly with the requests URI so CAA records with the "issuewild" tag MUST not
-be considered part of the relevant Resource Record set.
+exactly with the requested URI so CAs MUST NOT consider CAA records with the
+"issuewild" tag to be part of the relevant Resource Record set for a IP
+address.
 
-Unlike the mechanism defined in RFC 6844 {{RFC 6844}} this mechanism doesn't
+Unlike the mechanism defined in RFC 6844 {{RFC6844}} this mechanism doesn't
 involve climbing the DNS tree and only requires querying a single DNS name. The
 relevant Resource Record set for a given IP address is found by querying the
 reverse mapping zone for the IP for CAA records.
 
 Given a certificate request containing the IPv6 address "2001:db8::1" the relevant
-query for the reverse mapping within the IP6.ARPA {{!RFC3596}} would be:
+query for the reverse mapping within the IP6.ARPA {{!RFC3596}} zone would be:
 
 ~~~~~~~~~~
 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa. IN CAA
 ~~~~~~~~~~
 
 And for a request containing the IPv4 address "192.0.2.1" the relevant query for
-the reverse mapping within the IN-ADDR.ARPA {{!RFC1034}} would be:
+the reverse mapping within the IN-ADDR.ARPA {{!RFC1034}} zone would be:
 
 ~~~~~~~~~~
 1.2.0.192.in-addr.arpa. IN CAA
@@ -81,17 +87,10 @@ the reverse mapping within the IN-ADDR.ARPA {{!RFC1034}} would be:
 When doing queries CAs SHOULD either use a resolver that chases CNAME records or
 manually chase CNAMEs themselves in order to allow for zone delegations {{!RFC2317}}.
 
-# Security Considerations
-
-## Use of DNSSEC
-
 # IANA Considerations
 
 ## Certification Authority Restriction Properties
 
 Change the contents of the Meaning column for the "issue" Tag to say
-"Authorization Entry by Domain or IP address" and add "RFCXXXX" to the
+"Authorization Entry by Domain or IP address" and add "draft-shoemaker-caa-ip" to the
 References column.
-
-# Acknowledgments
-
