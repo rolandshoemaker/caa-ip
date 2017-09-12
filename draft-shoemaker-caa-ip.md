@@ -46,8 +46,7 @@ as previously a mechanism only existed for DNS names.
 
 In this document, the key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
 NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" are to be
-interpreted as described in BCP 14, RFC 2119 {{RFC2119}} and indicate
-requirement levels for compliant ACME-Wildcard implementations.
+interpreted as described in BCP 14, RFC 2119 {{RFC2119}}.
 
 # Mechanism
 
